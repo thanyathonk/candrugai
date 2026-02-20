@@ -7,6 +7,8 @@ const golosText = Golos_Text({
   weight: ["400", "500", "600", "700"],
   variable: "--font-golos-text",
   display: "swap",
+  preload: false,   // ไม่ block render ระหว่างรอ download font
+  fallback: ["system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {

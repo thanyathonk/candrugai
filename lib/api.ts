@@ -37,32 +37,35 @@ import {
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-/** true = use mock data (default); false = try real backend */
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK !== "false";
+/**
+ * true  = ใช้ mock data (default ตราบเท่า NEXT_PUBLIC_USE_MOCK ไม่ใช่ "false")
+ * false = เรียก backend จริง แล้ว fallback mock ถ้า fail
+ *
+ * เปลี่ยนเป็น false เมื่อ backend พร้อม
+ */
+const USE_MOCK: boolean =
+  typeof process !== "undefined"
+    ? process.env.NEXT_PUBLIC_USE_MOCK !== "false"
+    : true;
 
-/** Backend base URL — ถ้าไม่ set ใช้ same-origin */
+/** Backend base URL */
 function getBaseUrl(): string {
   return process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 }
 
 // ── Core fetch wrapper ────────────────────────────────────────────────────────
 
-/**
- * safeFetch — fetch with timeout + auto-fallback to mock data
- *
- * @param path         API path เช่น "/api/dashboard/summary?dataset_mode=adult"
- * @param mockFallback ฟังก์ชัน return mock data ถ้า fetch fail
- * @param timeoutMs    timeout ก่อน abort (default 10s)
- */
 async function safeFetch<T>(
   path: string,
   mockFallback: () => T,
   timeoutMs = 10_000
 ): Promise<T> {
+  // ── Mock mode: คืนข้อมูลทันที ───────────────────────────────────────────────
   if (USE_MOCK) {
     return mockFallback();
   }
 
+  // ── Real backend ─────────────────────────────────────────────────────────────
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -72,19 +75,12 @@ async function safeFetch<T>(
       next: { revalidate: 60 },
     });
     clearTimeout(timer);
-
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status} ${res.statusText}`);
-    }
-
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json() as Promise<T>;
   } catch (err) {
     clearTimeout(timer);
     const isAbort = err instanceof DOMException && err.name === "AbortError";
-    console.warn(
-      `[api] ${isAbort ? "timeout" : "error"} on ${path} — falling back to mock`,
-      isAbort ? "" : err
-    );
+    console.warn(`[api] ${isAbort ? "timeout" : "error"} on ${path} → mock fallback`, err);
     return mockFallback();
   }
 }
