@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/*
+ * Design System — CanDrugAI
+ * Source of truth: docs/design-system.md + docs/component-library.md
+ *
+ * Tailwind v4 uses @theme (CSS-based config) — ไม่มี tailwind.config.ts
+ * Token naming:
+ *   --color-brand-blue-700  →  class: bg-brand-blue-700 / text-brand-blue-700
+ *   --color-brand-green-700 →  class: bg-brand-green-700 / text-brand-green-700
+ *   --color-neutral-600     →  class: text-neutral-600 / border-neutral-600
+ *   --font-sans             →  class: font-sans (mapped to Golos Text)
+ */
+
+@theme {
+  /* ── Typography ─────────────────────────────────────────────────────── */
+  --font-sans: var(--font-golos-text), system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+
+  /* ── Brand Blue (Primary) ───────────────────────────────────────────── */
+  --color-brand-blue-700: #3F51B5;   /* primary button, links, highlight      */
+  --color-brand-blue-500: #6380C3;   /* hover state                           */
+  --color-brand-blue-200: #BCCBF0;   /* focus ring, chip border               */
+  --color-brand-blue-50:  #E2EDFE;   /* soft section bg, active chip bg       */
+
+  /* ── Brand Green (Secondary / Success) ─────────────────────────────── */
+  --color-brand-green-700: #35A265;  /* positive KPI, success, active filter  */
+  --color-brand-green-500: #68BA8C;  /* hover green                           */
+  --color-brand-green-200: #CDE8D9;  /* green chip border                     */
+  --color-brand-green-50:  #E6F4EC;  /* soft section bg (green tint)          */
+
+  /* ── Neutral Gray ───────────────────────────────────────────────────── */
+  --color-neutral-600: #949CA1;      /* secondary text, placeholder           */
+  --color-neutral-300: #BBC6CE;      /* default border                        */
+  --color-neutral-200: #E3E3E3;      /* light border, divider, subtle bg      */
+
+  /* ── Semantic aliases (maps to Tailwind utilities) ──────────────────── */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* ── Outcome Category Colors (ADR Database KPI cards) ───────────────── */
+  /* Each outcome gets a unique, medically meaningful color                */
+  --color-outcome-ca:     #7C3AED;   /* CA — Congenital Anomaly  → violet/purple  */
+  --color-outcome-ca-bg:  #F5F3FF;   /* CA soft background                        */
+  --color-outcome-ca-200: #DDD6FE;   /* CA border / badge                         */
+
+  --color-outcome-de:     #DC2626;   /* DE — Death               → crimson red    */
+  --color-outcome-de-bg:  #FEF2F2;   /* DE soft background                        */
+  --color-outcome-de-200: #FECACA;   /* DE border / badge                         */
+
+  --color-outcome-ds:     #EA580C;   /* DS — Disabling           → deep orange    */
+  --color-outcome-ds-bg:  #FFF7ED;   /* DS soft background                        */
+  --color-outcome-ds-200: #FED7AA;   /* DS border / badge                         */
+
+  --color-outcome-hl:     #3F51B5;   /* HL — Hospitalization     → brand blue     */
+  --color-outcome-hl-bg:  #E2EDFE;   /* HL soft background                        */
+  --color-outcome-hl-200: #BCCBF0;   /* HL border / badge                         */
+
+  --color-outcome-lt:     #D97706;   /* LT — Life Threatening    → amber          */
+  --color-outcome-lt-bg:  #FFFBEB;   /* LT soft background                        */
+  --color-outcome-lt-200: #FDE68A;   /* LT border / badge                         */
+
+  --color-outcome-ot:     #0D9488;   /* OT — Other               → teal           */
+  --color-outcome-ot-bg:  #F0FDFA;   /* OT soft background                        */
+  --color-outcome-ot-200: #99F6E4;   /* OT border / badge                         */
+}
+
+/* ── Team carousel progress bar ─────────────────────────────────────────── */
+@keyframes carousel-progress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* ── Marquee animation (CollaborationsSection infinite scroll) ───────────── */
+/*
+ * Key: each card slot includes its own right-padding so total width is
+ * exactly 2× the single-group width → translateX(-50%) is pixel-perfect
+ * translate3d forces GPU composite layer for buttery smooth motion
+ */
+@keyframes marquee {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.marquee-track {
+  animation: marquee 32s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.marquee-wrapper:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ── Base styles ─────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: #171717;
+    font-family: var(--font-sans);
+  }
+
+  /* Typography scale (ตาม docs/component-library.md section 2.3) */
+  h1 { font-weight: 700; }   /* 700 — hero title */
+  h2 { font-weight: 600; }   /* 600 — section heading */
+  h3 { font-weight: 600; }   /* 600 — sub-section heading */
+  p  { font-weight: 400; }   /* 400 — body text */
+}

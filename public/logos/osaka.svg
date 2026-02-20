@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <circle cx="60" cy="60" r="58" fill="#1A2E5A" stroke="#1A2E5A" stroke-width="1"/>
+  <!-- Stylised flame / torch -->
+  <ellipse cx="60" cy="45" rx="10" ry="15" fill="#F5A623" opacity="0.9"/>
+  <ellipse cx="60" cy="50" rx="6" ry="10" fill="#FBBF24"/>
+  <rect x="56" y="58" width="8" height="14" rx="2" fill="white" opacity="0.8"/>
+  <text x="60" y="84" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="white" letter-spacing="0.5">OSAKA</text>
+  <text x="60" y="96" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7.5" font-weight="400" fill="white" opacity="0.75">UNIVERSITY</text>
+</svg>
